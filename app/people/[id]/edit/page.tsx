@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter, useParams } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { createClient } from '@/lib/supabase'
 import { Button } from '@/components/ui/Button'
@@ -10,14 +10,16 @@ import { Textarea } from '@/components/ui/Textarea'
 import { TagInput } from '@/components/ui/TagInput'
 import { ArrowLeft, Save, User, Tag, Globe, MessageSquare } from 'lucide-react'
 import Link from 'next/link'
-import type { PersonFormData } from '@/types'
+import type { PersonFormData, Person } from '@/types'
 
-export default function NewPersonPage() {
+export default function EditPersonPage() {
     const { user } = useAuth()
     const router = useRouter()
+    const params = useParams()
     const supabase = createClient()
 
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
+    const [saving, setSaving] = useState(false)
     const [error, setError] = useState('')
 
     const [formData, setFormData] = useState<PersonFormData>({
@@ -40,6 +42,52 @@ export default function NewPersonPage() {
         },
         notes: ''
     })
+
+    useEffect(() => {
+        if (user && params.id) {
+            fetchPerson()
+        }
+    }, [user, params.id])
+
+    const fetchPerson = async () => {
+        try {
+            setLoading(true)
+            const { data, error } = await supabase
+                .from('people')
+                .select('*')
+                .eq('id', params.id)
+                .single()
+
+            if (error) throw error
+
+            // Populate form with existing data
+            setFormData({
+                name: data.name || '',
+                profession: data.profession || '',
+                skills: data.skills || [],
+                role: data.role || '',
+                tags: data.tags || [],
+                contacts: {
+                    instagram: data.contacts?.instagram || '',
+                    whatsapp: data.contacts?.whatsapp || '',
+                    linkedin: data.contacts?.linkedin || '',
+                    github: data.contacts?.github || '',
+                    discord: data.contacts?.discord || '',
+                    email: data.contacts?.email || '',
+                    phone: data.contacts?.phone || '',
+                    twitter: data.contacts?.twitter || '',
+                    telegram: data.contacts?.telegram || '',
+                    website: data.contacts?.website || ''
+                },
+                notes: data.notes || ''
+            })
+        } catch (error) {
+            console.error('Error fetching person:', error)
+            router.push('/people')
+        } finally {
+            setLoading(false)
+        }
+    }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target
@@ -67,7 +115,7 @@ export default function NewPersonPage() {
             return
         }
 
-        setLoading(true)
+        setSaving(true)
         setError('')
 
         try {
@@ -78,31 +126,29 @@ export default function NewPersonPage() {
                 return acc
             }, {} as Record<string, string>)
 
-            const { data, error: insertError } = await supabase
+            const { error: updateError } = await supabase
                 .from('people')
-                .insert([
-                    {
-                        user_id: user.id,
-                        name: formData.name.trim(),
-                        profession: formData.profession.trim() || null,
-                        skills: formData.skills.length > 0 ? formData.skills : null,
-                        role: formData.role.trim() || null,
-                        tags: formData.tags.length > 0 ? formData.tags : null,
-                        contacts: Object.keys(cleanedContacts).length > 0 ? cleanedContacts : null,
-                        notes: formData.notes.trim() || null
-                    }
-                ])
-                .select()
+                .update({
+                    name: formData.name.trim(),
+                    profession: formData.profession.trim() || null,
+                    skills: formData.skills.length > 0 ? formData.skills : null,
+                    role: formData.role.trim() || null,
+                    tags: formData.tags.length > 0 ? formData.tags : null,
+                    contacts: Object.keys(cleanedContacts).length > 0 ? cleanedContacts : null,
+                    notes: formData.notes.trim() || null,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', params.id)
 
-            if (insertError) throw insertError
+            if (updateError) throw updateError
 
-            router.push('/people')
+            router.push(`/people/${params.id}`)
             router.refresh()
         } catch (err: any) {
-            console.error('Error adding person:', err)
-            setError(err.message || 'Failed to add person')
+            console.error('Error updating person:', err)
+            setError(err.message || 'Failed to update person')
         } finally {
-            setLoading(false)
+            setSaving(false)
         }
     }
 
@@ -119,27 +165,36 @@ export default function NewPersonPage() {
         'Other'
     ]
 
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary dark:border-primary-dark mx-auto mb-4"></div>
+                    <p className="text-text-secondary dark:text-text-darkSecondary">Loading...</p>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="max-w-4xl mx-auto space-y-6">
-            {/* Compact Header */}
+            {/* Header */}
             <div className="space-y-4">
-                {/* Back Button - Minimalist */}
                 <Link
-                    href="/people"
+                    href={`/people/${params.id}`}
                     className="inline-flex items-center gap-2 text-sm text-text-secondary dark:text-text-darkSecondary
             hover:text-primary dark:hover:text-primary-dark transition-colors group"
                 >
                     <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                    <span>Back to People</span>
+                    <span>Back to Details</span>
                 </Link>
 
-                {/* Title Section */}
                 <div>
                     <h1 className="text-2xl md:text-3xl font-bold text-text dark:text-text-dark mb-2">
-                        Add New Person
+                        Edit Person
                     </h1>
                     <p className="text-text-secondary dark:text-text-darkSecondary text-sm md:text-base">
-                        Fill in the information to add someone to your network
+                        Update information for {formData.name}
                     </p>
                 </div>
             </div>
@@ -346,10 +401,10 @@ export default function NewPersonPage() {
                     </div>
                 )}
 
-                {/* Submit Buttons - Sticky Bottom */}
+                {/* Submit Buttons */}
                 <div className="sticky bottom-4 bg-cardBg dark:bg-cardBg-dark p-4 rounded-xl border-2
           border-border dark:border-border-dark shadow-lg flex gap-3 justify-end">
-                    <Link href="/people">
+                    <Link href={`/people/${params.id}`}>
                         <Button type="button" variant="outline" size="sm">
                             Cancel
                         </Button>
@@ -358,11 +413,11 @@ export default function NewPersonPage() {
                         type="submit"
                         variant="primary"
                         size="sm"
-                        loading={loading}
+                        loading={saving}
                         className="flex items-center gap-2"
                     >
                         <Save className="w-4 h-4" />
-                        Save Person
+                        Save Changes
                     </Button>
                 </div>
             </form>

@@ -14,7 +14,10 @@ import {
     CheckCircle2,
     Lightbulb,
     Pause,
-    XCircle
+    XCircle,
+    Eye,
+    Edit,
+    MoreVertical
 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 
@@ -54,11 +57,12 @@ const priorityColors: Record<string, string> = {
 }
 
 export function ProjectCard({ project, people, onDelete }: ProjectCardProps) {
+    const [showMenu, setShowMenu] = useState(false)
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
     const [deleting, setDeleting] = useState(false)
 
     const StatusIcon = statusConfig[project.status]?. icon || AlertCircle
-    const statusColor = statusConfig[project.status]?.color || 'text-gray-500'
+    const statusColor = statusConfig[project. status]?.color || 'text-gray-500'
 
     const teamMembers = people.filter(p => project.team_members?. includes(p.id))
 
@@ -67,11 +71,11 @@ export function ProjectCard({ project, people, onDelete }: ProjectCardProps) {
     const handleDelete = async () => {
         setDeleting(true)
         try {
-            const response = await fetch(`/projects/${project.id}`, {
+            const response = await fetch(`/projects/${project. id}`, {
                 method: 'DELETE',
             })
 
-            if (! response.ok) throw new Error('Failed to delete')
+            if (!response. ok) throw new Error('Failed to delete')
             onDelete()
         } catch (error) {
             alert('Failed to delete project')
@@ -90,8 +94,8 @@ export function ProjectCard({ project, people, onDelete }: ProjectCardProps) {
                 <div className="flex-1 min-w-0">
                     <Link href={`/projects/${project. id}`}>
                         <h3 className="text-lg font-semibold text-text dark:text-text-dark hover:text-primary
-              dark:hover:text-primary-dark transition-colors mb-2 line-clamp-2">
-                            {project.title}
+              dark:hover:text-primary-dark transition-colors mb-2 line-clamp-2 cursor-pointer">
+                            {project. title}
                         </h3>
                     </Link>
                     <div className="flex flex-wrap gap-2 mb-3">
@@ -104,13 +108,85 @@ export function ProjectCard({ project, people, onDelete }: ProjectCardProps) {
                     </div>
                 </div>
 
-                <button
-                    onClick={() => setShowDeleteConfirm(true)}
-                    className="ml-3 p-2 text-text-secondary dark:text-text-darkSecondary hover:text-red-600
-            dark:hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
-                >
-                    <Trash2 className="w-4 h-4" />
-                </button>
+                {/* Menu Button */}
+                <div className="relative ml-3">
+                    <button
+                        onClick={() => setShowMenu(! showMenu)}
+                        className="p-2 text-text-secondary dark:text-text-darkSecondary hover:text-text dark:hover:text-text-dark
+              hover:bg-background dark:hover:bg-background-dark rounded-lg transition-colors"
+                    >
+                        <MoreVertical className="w-5 h-5" />
+                    </button>
+
+                    {/* Dropdown Menu */}
+                    {showMenu && (
+                        <>
+                            <div
+                                className="fixed inset-0 z-10"
+                                onClick={() => setShowMenu(false)}
+                            />
+                            <div className="absolute right-0 top-full mt-2 w-48 bg-cardBg dark:bg-cardBg-dark
+                border-2 border-border dark:border-border-dark rounded-xl shadow-lg z-20 overflow-hidden">
+                                <Link
+                                    href={`/projects/${project.id}`}
+                                    className="flex items-center gap-3 px-4 py-3 hover:bg-background dark:hover:bg-background-dark
+                    text-text dark:text-text-dark transition-colors"
+                                    onClick={() => setShowMenu(false)}
+                                >
+                                    <Eye className="w-4 h-4" />
+                                    <span className="text-sm">View Details</span>
+                                </Link>
+                                <Link
+                                    href={`/projects/${project.id}`}
+                                    className="flex items-center gap-3 px-4 py-3 hover:bg-background dark:hover:bg-background-dark
+                    text-text dark:text-text-dark transition-colors"
+                                    onClick={() => setShowMenu(false)}
+                                >
+                                    <Edit className="w-4 h-4" />
+                                    <span className="text-sm">Edit Project</span>
+                                </Link>
+                                {project.github_url && (
+                                    <a
+                                        href={project. github_url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-3 px-4 py-3 hover:bg-background dark:hover:bg-background-dark
+                      text-text dark:text-text-dark transition-colors"
+                                        onClick={() => setShowMenu(false)}
+                                    >
+                                        <Github className="w-4 h-4" />
+                                        <span className="text-sm">Open GitHub</span>
+                                    </a>
+                                )}
+                                {project.demo_url && (
+                                    <a
+                                        href={project.demo_url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-3 px-4 py-3 hover:bg-background dark:hover:bg-background-dark
+                      text-text dark:text-text-dark transition-colors"
+                                        onClick={() => setShowMenu(false)}
+                                    >
+                                        <ExternalLink className="w-4 h-4" />
+                                        <span className="text-sm">Open Demo</span>
+                                    </a>
+                                )}
+                                <div className="border-t border-border dark:border-border-dark" />
+                                <button
+                                    onClick={() => {
+                                        setShowMenu(false)
+                                        setShowDeleteConfirm(true)
+                                    }}
+                                    className="flex items-center gap-3 px-4 py-3 hover:bg-red-50 dark:hover:bg-red-950
+                    text-red-600 dark:text-red-400 transition-colors w-full"
+                                >
+                                    <Trash2 className="w-4 h-4" />
+                                    <span className="text-sm">Delete Project</span>
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </div>
             </div>
 
             {/* Description */}
@@ -136,13 +212,13 @@ export function ProjectCard({ project, people, onDelete }: ProjectCardProps) {
                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                     <div
                         className="bg-primary dark:bg-primary-dark h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${project.progress}%` }}
+                        style={{ width: `${project. progress}%` }}
                     />
                 </div>
             </div>
 
             {/* Tech Stack */}
-            {project.tech_stack && project.tech_stack.length > 0 && (
+            {project.tech_stack && project.tech_stack. length > 0 && (
                 <div className="flex flex-wrap gap-1 mb-4">
                     {project.tech_stack.slice(0, 4).map((tech, index) => (
                         <span
@@ -183,26 +259,30 @@ export function ProjectCard({ project, people, onDelete }: ProjectCardProps) {
                     )}
                 </div>
 
-                {/* Links */}
+                {/* Quick Access Icons */}
                 <div className="flex items-center gap-2">
                     {project.github_url && (
                         <a
                             href={project.github_url}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
                             className="p-1. 5 text-text-secondary dark:text-text-darkSecondary hover:text-primary
                 dark:hover:text-primary-dark transition-colors"
+                            title="Open GitHub"
                         >
                             <Github className="w-4 h-4" />
                         </a>
                     )}
-                    {project. demo_url && (
+                    {project.demo_url && (
                         <a
                             href={project.demo_url}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
                             className="p-1.5 text-text-secondary dark:text-text-darkSecondary hover:text-primary
                 dark:hover:text-primary-dark transition-colors"
+                            title="Open Demo"
                         >
                             <ExternalLink className="w-4 h-4" />
                         </a>

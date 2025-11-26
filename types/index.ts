@@ -104,3 +104,42 @@ export interface Project {
     created_at: string
     updated_at: string
 }
+
+//Skills Feature
+export type SkillCategory = 'web' | 'mobile' | 'iot' | 'ai' | 'devops' | 'data' | 'embedded' | 'design' | 'soft-skill'
+
+export type SkillType = 'language' | 'framework' | 'library' | 'tool' | 'platform' | 'hardware' | 'soft-skill'
+
+export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'expert'
+
+export type SkillDifficulty = 'easy' | 'medium' | 'hard' | 'insane'
+
+export interface SkillResource {
+    title: string
+    url: string
+    type: 'youtube' | 'course' | 'documentation' | 'article' | 'book' | 'other'
+    completed?: boolean
+}
+
+export interface Skill {
+    id: string
+    user_id: string
+    name: string
+    category: SkillCategory
+    skill_type: SkillType
+    level: SkillLevel
+    difficulty: SkillDifficulty
+    progress: number
+    practice_hours: number
+    description?: string
+    icon_url?: string
+    resources?: SkillResource[]
+    projects_count: number
+    learning_since?: string
+    last_practiced?: string
+    notes?: string
+    tags?: string[]
+    is_featured: boolean
+    created_at: string
+    updated_at: string
+}

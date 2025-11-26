@@ -70,3 +70,37 @@ export interface PersonFormData {
     }
     notes: string
 }
+
+// Projects Feature
+// Add to your existing types/index.ts
+
+export type ProjectCategory =
+    'school' | 'competition' | 'personal' | 'client' | 'startup' | 'web' | 'iot' | 'ai' | 'mobile' | 'api'
+
+export type ProjectStatus =
+    'idea' | 'planning' | 'in-progress' | 'on-hold' | 'completed' | 'cancelled'
+
+export type ProjectPriority =
+    'low' | 'medium' | 'high' | 'urgent'
+
+export interface Project {
+    id: string
+    user_id: string
+    title: string
+    description?: string
+    category: ProjectCategory
+    status: ProjectStatus
+    progress: number
+    deadline?: string
+    start_date?: string
+    completed_at?: string
+    priority: ProjectPriority
+    tags?: string[]
+    tech_stack?: string[]
+    github_url?: string
+    demo_url?: string
+    notes?: string
+    team_members?: string[]
+    created_at: string
+    updated_at: string
+}

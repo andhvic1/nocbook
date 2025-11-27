@@ -73,7 +73,7 @@ const difficultyConfig: Record<string, { icon: any; color: string; bgColor: stri
         icon: Flame,
         color: 'text-red-600 dark:text-red-400',
         bgColor: 'bg-red-500/10',
-        label: 'Insane 💀'
+        label: 'Insane'
     },
 }
 
@@ -87,16 +87,6 @@ const categoryColors: Record<string, string> = {
     'embedded': 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400',
     'design': 'bg-purple-500/10 text-purple-600 dark:text-purple-400',
     'soft-skill': 'bg-blue-500/10 text-blue-600 dark:text-blue-400',
-}
-
-const typeEmojis: Record<string, string> = {
-    'language': '💻',
-    'framework': '🏗️',
-    'library': '📚',
-    'tool': '🔧',
-    'platform': '☁️',
-    'hardware': '⚙️',
-    'soft-skill': '🧠',
 }
 
 const resourceIcons: Record<string, any> = {
@@ -129,7 +119,7 @@ export function SkillCard({ skill, onDelete }: SkillCardProps) {
                 method: 'DELETE',
             })
 
-            if (!response. ok) throw new Error('Failed to delete')
+            if (! response.ok) throw new Error('Failed to delete')
             onDelete()
         } catch (error) {
             alert('Failed to delete skill')
@@ -150,32 +140,24 @@ export function SkillCard({ skill, onDelete }: SkillCardProps) {
             {/* Header */}
             <div className="flex items-start justify-between mb-4">
                 <div className="flex-1 min-w-0">
-                    <div className="flex items-start gap-3 mb-3">
-                        {/* Icon/Emoji */}
-                        <div className="text-3xl flex-shrink-0">
-                            {skill.icon_url || typeEmojis[skill.skill_type] || '📦'}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                            <Link href={`/skills/${skill. id}`}>
-                                <h3 className="text-lg font-semibold text-text dark:text-text-dark hover:text-primary
-                  dark:hover:text-primary-dark transition-colors mb-2 line-clamp-1 cursor-pointer">
-                                    {skill.name}
-                                    {skill.is_featured && (
-                                        <Star className="inline-block w-4 h-4 ml-2 text-yellow-500 fill-yellow-500" />
-                                    )}
-                                </h3>
-                            </Link>
-                            <div className="flex flex-wrap gap-2">
-                <span className={`px-2 py-1 rounded-md text-xs font-medium ${
-                    categoryColors[skill.category] || categoryColors['web']
-                }`}>
-                  {skill.category}
-                </span>
-                                <span className="px-2 py-1 rounded-md text-xs font-medium bg-gray-500/10 text-gray-600 dark:text-gray-400">
-                  {skill.skill_type}
-                </span>
-                            </div>
-                        </div>
+                    <Link href={`/skills/${skill. id}`}>
+                        <h3 className="text-lg font-semibold text-text dark:text-text-dark hover:text-primary
+              dark:hover:text-primary-dark transition-colors mb-2 line-clamp-1 cursor-pointer">
+                            {skill. name}
+                            {skill.is_featured && (
+                                <Star className="inline-block w-4 h-4 ml-2 text-yellow-500 fill-yellow-500" />
+                            )}
+                        </h3>
+                    </Link>
+                    <div className="flex flex-wrap gap-2 mb-3">
+            <span className={`px-2 py-1 rounded-md text-xs font-medium ${
+                categoryColors[skill.category] || categoryColors['web']
+            }`}>
+              {skill.category}
+            </span>
+                        <span className="px-2 py-1 rounded-md text-xs font-medium bg-gray-500/10 text-gray-600 dark:text-gray-400">
+              {skill.skill_type}
+            </span>
                     </div>
                 </div>
 
@@ -245,7 +227,7 @@ export function SkillCard({ skill, onDelete }: SkillCardProps) {
             <div className="flex gap-2 mb-4">
                 <div className={`flex items-center gap-1. 5 px-3 py-1. 5 rounded-lg ${levelBgColor}`}>
           <span className={`text-xs font-medium ${levelColor}`}>
-            My Level: {levelLabel}
+            Level: {levelLabel}
           </span>
                 </div>
                 <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg ${difficultyBgColor}`}>
@@ -279,7 +261,7 @@ export function SkillCard({ skill, onDelete }: SkillCardProps) {
                 </div>
             </div>
 
-            {/* Practice Hours - BIG FEATURE!  */}
+            {/* Practice Hours */}
             {skill.practice_hours > 0 && (
                 <div className="mb-4 p-3 bg-primary/5 dark:bg-primary-dark/5 rounded-lg border border-primary/20 dark:border-primary-dark/20">
                     <div className="flex items-center justify-between">
@@ -295,7 +277,7 @@ export function SkillCard({ skill, onDelete }: SkillCardProps) {
             )}
 
             {/* Resources */}
-            {skill. resources && skill.resources.length > 0 && (
+            {skill.resources && skill.resources.length > 0 && (
                 <div className="mb-4">
                     <p className="text-xs text-text-secondary dark:text-text-darkSecondary mb-2">
                         Resources ({skill.resources.length})

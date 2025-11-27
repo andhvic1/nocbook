@@ -4,33 +4,33 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Skill, SkillCategory, SkillType, SkillLevel, SkillDifficulty } from '@/types'
 import { Button } from '@/components/ui/Button'
-import { X, Plus, Trash2 } from 'lucide-react'
+import { X, Plus, Trash2, Globe, Smartphone, Cpu, Brain, Rocket, Database, Zap, Palette, Users } from 'lucide-react'
 import { createClient } from '@/lib/supabase'
 
 interface SkillFormProps {
     skill?: Skill
 }
 
-const categories: { value: SkillCategory; label: string; emoji: string }[] = [
-    { value: 'web', label: 'Web Development', emoji: '🌐' },
-    { value: 'mobile', label: 'Mobile', emoji: '📱' },
-    { value: 'iot', label: 'IoT', emoji: '🔌' },
-    { value: 'ai', label: 'AI/ML', emoji: '🤖' },
-    { value: 'devops', label: 'DevOps', emoji: '🚀' },
-    { value: 'data', label: 'Data Science', emoji: '📊' },
-    { value: 'embedded', label: 'Embedded Systems', emoji: '⚡' },
-    { value: 'design', label: 'Design', emoji: '🎨' },
-    { value: 'soft-skill', label: 'Soft Skills', emoji: '🧠' },
+const categories: { value: SkillCategory; label: string; icon: any }[] = [
+    { value: 'web', label: 'Web Development', icon: Globe },
+    { value: 'mobile', label: 'Mobile', icon: Smartphone },
+    { value: 'iot', label: 'IoT', icon: Cpu },
+    { value: 'ai', label: 'AI/ML', icon: Brain },
+    { value: 'devops', label: 'DevOps', icon: Rocket },
+    { value: 'data', label: 'Data Science', icon: Database },
+    { value: 'embedded', label: 'Embedded Systems', icon: Zap },
+    { value: 'design', label: 'Design', icon: Palette },
+    { value: 'soft-skill', label: 'Soft Skills', icon: Users },
 ]
 
-const skillTypes: { value: SkillType; label: string; emoji: string }[] = [
-    { value: 'language', label: 'Programming Language', emoji: '💻' },
-    { value: 'framework', label: 'Framework', emoji: '🏗️' },
-    { value: 'library', label: 'Library', emoji: '📚' },
-    { value: 'tool', label: 'Tool', emoji: '🔧' },
-    { value: 'platform', label: 'Platform', emoji: '☁️' },
-    { value: 'hardware', label: 'Hardware', emoji: '⚙️' },
-    { value: 'soft-skill', label: 'Soft Skill', emoji: '🧠' },
+const skillTypes: { value: SkillType; label: string }[] = [
+    { value: 'language', label: 'Programming Language' },
+    { value: 'framework', label: 'Framework' },
+    { value: 'library', label: 'Library' },
+    { value: 'tool', label: 'Tool' },
+    { value: 'platform', label: 'Platform' },
+    { value: 'hardware', label: 'Hardware' },
+    { value: 'soft-skill', label: 'Soft Skill' },
 ]
 
 const levels: { value: SkillLevel; label: string; description: string }[] = [
@@ -44,7 +44,7 @@ const difficulties: { value: SkillDifficulty; label: string; description: string
     { value: 'easy', label: 'Easy', description: 'Quick to learn' },
     { value: 'medium', label: 'Medium', description: 'Moderate learning curve' },
     { value: 'hard', label: 'Hard', description: 'Steep learning curve' },
-    { value: 'insane', label: 'Insane 💀', description: 'Extremely challenging' },
+    { value: 'insane', label: 'Insane', description: 'Extremely challenging' },
 ]
 
 const resourceTypes = [
@@ -72,7 +72,7 @@ export function SkillForm({ skill }: SkillFormProps) {
     const [description, setDescription] = useState(skill?.description || '')
     const [iconUrl, setIconUrl] = useState(skill?.icon_url || '')
     const [learningSince, setLearningSince] = useState(
-        skill?.learning_since ? skill.learning_since.split('T')[0] : ''
+        skill?.learning_since ?  skill.learning_since.split('T')[0] : ''
     )
     const [lastPracticed, setLastPracticed] = useState(
         skill?.last_practiced ? skill.last_practiced.split('T')[0] : ''
@@ -112,7 +112,7 @@ export function SkillForm({ skill }: SkillFormProps) {
 
     const handleAddResource = () => {
         if (newResource.title.trim() && newResource.url.trim()) {
-            setResources([...resources, { ...newResource }])
+            setResources([... resources, { ...newResource }])
             setNewResource({ title: '', url: '', type: 'youtube', completed: false })
             setShowResourceForm(false)
         }
@@ -144,7 +144,7 @@ export function SkillForm({ skill }: SkillFormProps) {
                 learning_since: learningSince || null,
                 last_practiced: lastPracticed || null,
                 notes: notes || null,
-                tags: tags.length > 0 ? tags : null,
+                tags: tags. length > 0 ? tags : null,
                 resources: resources.length > 0 ? resources : null,
                 is_featured: isFeatured,
                 updated_at: new Date().toISOString(),
@@ -154,14 +154,14 @@ export function SkillForm({ skill }: SkillFormProps) {
                 // Update existing skill
                 const { error } = await supabase
                     .from('skills')
-                    .update(skillData)
-                    .eq('id', skill. id)
+                    . update(skillData)
+                    . eq('id', skill.id)
 
                 if (error) throw error
             } else {
                 // Create new skill
                 const { error } = await supabase
-                    .from('skills')
+                    . from('skills')
                     .insert(skillData)
 
                 if (error) throw error
@@ -180,8 +180,8 @@ export function SkillForm({ skill }: SkillFormProps) {
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
             {/* Name & Icon */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="md:col-span-3">
+            <div className="grid grid-cols-1 gap-4">
+                <div>
                     <label className="block text-sm font-medium text-text dark:text-text-dark mb-2">
                         Skill Name *
                     </label>
@@ -197,22 +197,6 @@ export function SkillForm({ skill }: SkillFormProps) {
               placeholder:text-text-secondary dark:placeholder:text-text-darkSecondary"
                     />
                 </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-text dark:text-text-dark mb-2">
-                        Icon/Emoji
-                    </label>
-                    <input
-                        type="text"
-                        value={iconUrl}
-                        onChange={(e) => setIconUrl(e.target.value)}
-                        placeholder="🐍"
-                        maxLength={10}
-                        className="w-full px-4 py-2 rounded-lg border-2 border-border dark:border-border-dark
-              bg-cardBg dark:bg-cardBg-dark text-text dark:text-text-dark text-center text-2xl
-              focus:outline-none focus:border-primary dark:focus:border-primary-dark transition-colors"
-                    />
-                </div>
             </div>
 
             {/* Description */}
@@ -222,7 +206,7 @@ export function SkillForm({ skill }: SkillFormProps) {
                 </label>
                 <textarea
                     value={description}
-                    onChange={(e) => setDescription(e. target.value)}
+                    onChange={(e) => setDescription(e.target.value)}
                     rows={3}
                     placeholder="What is this skill about?"
                     className="w-full px-4 py-2 rounded-lg border-2 border-border dark:border-border-dark
@@ -246,9 +230,9 @@ export function SkillForm({ skill }: SkillFormProps) {
               bg-cardBg dark:bg-cardBg-dark text-text dark:text-text-dark
               focus:outline-none focus:border-primary dark:focus:border-primary-dark transition-colors"
                     >
-                        {categories. map(cat => (
+                        {categories.map(cat => (
                             <option key={cat.value} value={cat.value}>
-                                {cat.emoji} {cat.label}
+                                {cat.label}
                             </option>
                         ))}
                     </select>
@@ -268,14 +252,14 @@ export function SkillForm({ skill }: SkillFormProps) {
                     >
                         {skillTypes.map(type => (
                             <option key={type.value} value={type.value}>
-                                {type.emoji} {type. label}
+                                {type.label}
                             </option>
                         ))}
                     </select>
                 </div>
             </div>
 
-            {/* Level & Difficulty - SEPARATED!   */}
+            {/* Level & Difficulty */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label className="block text-sm font-medium text-text dark:text-text-dark mb-2">
@@ -286,7 +270,7 @@ export function SkillForm({ skill }: SkillFormProps) {
                             <label
                                 key={lvl.value}
                                 className={`flex items-start gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
-                                    level === lvl.value
+                                    level === lvl. value
                                         ? 'border-primary dark:border-primary-dark bg-primary/5 dark:bg-primary-dark/5'
                                         : 'border-border dark:border-border-dark hover:border-primary/50 dark:hover:border-primary-dark/50'
                                 }`}
@@ -364,7 +348,7 @@ export function SkillForm({ skill }: SkillFormProps) {
                 </div>
             </div>
 
-            {/* Practice Hours - BIG FEATURE!  */}
+            {/* Practice Hours */}
             <div>
                 <label className="block text-sm font-medium text-text dark:text-text-dark mb-2">
                     Practice Hours
@@ -398,7 +382,7 @@ export function SkillForm({ skill }: SkillFormProps) {
                     <input
                         type="date"
                         value={learningSince}
-                        onChange={(e) => setLearningSince(e. target.value)}
+                        onChange={(e) => setLearningSince(e.target. value)}
                         className="w-full px-4 py-2 rounded-lg border-2 border-border dark:border-border-dark
               bg-cardBg dark:bg-cardBg-dark text-text dark:text-text-dark
               focus:outline-none focus:border-primary dark:focus:border-primary-dark transition-colors"
@@ -443,7 +427,7 @@ export function SkillForm({ skill }: SkillFormProps) {
                 </div>
                 {tags.length > 0 && (
                     <div className="flex flex-wrap gap-2">
-                        {tags.map(tag => (
+                        {tags. map(tag => (
                             <span
                                 key={tag}
                                 className="px-3 py-1 bg-primary/10 text-primary dark:text-primary-dark rounded-full
@@ -466,17 +450,18 @@ export function SkillForm({ skill }: SkillFormProps) {
             {/* Resources */}
             <div>
                 <div className="flex items-center justify-between mb-3">
-                    <label className="block text-sm font-medium text-text dark:text-text-dark">
+                    <label className="text-sm font-medium text-text dark:text-text-dark">
                         Learning Resources
                     </label>
                     <Button
                         type="button"
                         variant="outline"
                         size="sm"
-                        onClick={() => setShowResourceForm(! showResourceForm)}
+                        onClick={() => setShowResourceForm(!showResourceForm)}
+                        className="flex items-center gap-1. 5"
                     >
-                        <Plus className="w-4 h-4 mr-1" />
-                        Add Resource
+                        <Plus className="w-4 h-4" />
+                        <span>Add Resource</span>
                     </Button>
                 </div>
 
@@ -485,29 +470,29 @@ export function SkillForm({ skill }: SkillFormProps) {
                     <div className="mb-4 p-4 bg-background dark:bg-background-dark rounded-lg border-2 border-border dark:border-border-dark space-y-3">
                         <input
                             type="text"
-                            value={newResource. title}
-                            onChange={(e) => setNewResource({ ...newResource, title: e. target.value })}
+                            value={newResource.title}
+                            onChange={(e) => setNewResource({ ... newResource, title: e. target.value })}
                             placeholder="Resource title"
                             className="w-full px-4 py-2 rounded-lg border-2 border-border dark:border-border-dark
-                bg-cardBg dark:bg-cardBg-dark text-text dark:text-text-dark
-                focus:outline-none focus:border-primary dark:focus:border-primary-dark transition-colors"
+          bg-cardBg dark:bg-cardBg-dark text-text dark:text-text-dark
+          focus:outline-none focus:border-primary dark:focus:border-primary-dark transition-colors"
                         />
                         <input
                             type="url"
-                            value={newResource.url}
+                            value={newResource. url}
                             onChange={(e) => setNewResource({ ...newResource, url: e.target.value })}
                             placeholder="https://..."
                             className="w-full px-4 py-2 rounded-lg border-2 border-border dark:border-border-dark
-                bg-cardBg dark:bg-cardBg-dark text-text dark:text-text-dark
-                focus:outline-none focus:border-primary dark:focus:border-primary-dark transition-colors"
+          bg-cardBg dark:bg-cardBg-dark text-text dark:text-text-dark
+          focus:outline-none focus:border-primary dark:focus:border-primary-dark transition-colors"
                         />
                         <div className="flex gap-2">
                             <select
                                 value={newResource.type}
                                 onChange={(e) => setNewResource({ ...newResource, type: e.target.value })}
                                 className="flex-1 px-4 py-2 rounded-lg border-2 border-border dark:border-border-dark
-                  bg-cardBg dark:bg-cardBg-dark text-text dark:text-text-dark
-                  focus:outline-none focus:border-primary dark:focus:border-primary-dark transition-colors"
+            bg-cardBg dark:bg-cardBg-dark text-text dark:text-text-dark
+            focus:outline-none focus:border-primary dark:focus:border-primary-dark transition-colors"
                             >
                                 {resourceTypes.map(type => (
                                     <option key={type.value} value={type.value}>{type.label}</option>
@@ -535,11 +520,11 @@ export function SkillForm({ skill }: SkillFormProps) {
                             <div
                                 key={index}
                                 className="flex items-center gap-3 p-3 bg-background dark:bg-background-dark rounded-lg
-                  border border-border dark:border-border-dark"
+            border border-border dark:border-border-dark"
                             >
                                 <div className="flex-1 min-w-0">
                                     <p className="text-sm font-medium text-text dark:text-text-dark truncate">
-                                        {resource.title}
+                                        {resource. title}
                                     </p>
                                     <div className="flex items-center gap-2">
                                         <a
@@ -551,15 +536,15 @@ export function SkillForm({ skill }: SkillFormProps) {
                                             {resource.url}
                                         </a>
                                         <span className="text-xs text-text-secondary dark:text-text-darkSecondary">
-                      ({resource.type})
-                    </span>
+                • {resource.type}
+              </span>
                                     </div>
                                 </div>
                                 <button
                                     type="button"
                                     onClick={() => handleRemoveResource(index)}
                                     className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950
-                    rounded-lg transition-colors"
+              rounded-lg transition-colors flex-shrink-0"
                                 >
                                     <Trash2 className="w-4 h-4" />
                                 </button>
@@ -596,7 +581,7 @@ export function SkillForm({ skill }: SkillFormProps) {
                     className="w-4 h-4"
                 />
                 <label htmlFor="featured" className="text-sm text-text dark:text-text-dark cursor-pointer">
-                    ⭐ Mark as featured skill (show on portfolio/profile)
+                    Mark as featured skill (show on portfolio/profile)
                 </label>
             </div>
 

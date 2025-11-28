@@ -182,3 +182,72 @@ export interface Event {
     created_at: string
     updated_at: string
 }
+
+// Task Feature
+export type TaskCategory = 'school' | 'content' | 'project' | 'personal' | 'learning' | 'work' | 'health' | 'other'
+
+export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent'
+
+export type TaskStatus = 'not-started' | 'in-progress' | 'done' | 'blocked' | 'cancelled'
+
+export type RecurrencePattern = 'daily' | 'weekly' | 'monthly' | 'yearly'
+
+export interface Task {
+    id: string
+    user_id: string
+    title: string
+    description?: string
+    notes?: string
+    category: TaskCategory
+    priority: TaskPriority
+    status: TaskStatus
+    due_date?: string
+    due_time?: string
+    estimated_time?: number // in minutes
+    actual_time_spent: number // in minutes
+    progress: number // 0-100
+    skill_id?: string
+    project_id?: string
+    event_id?: string
+    is_recurring: boolean
+    recurrence_pattern?: RecurrencePattern
+    recurrence_end_date?: string
+    parent_recurring_task_id?: string
+    tags?: string[]
+    attachments?: string[]
+    is_featured: boolean
+    completed_at?: string
+    created_at: string
+    updated_at: string
+}
+
+export interface Subtask {
+    id: string
+    task_id: string
+    title: string
+    is_completed: boolean
+    order_index: number
+    created_at: string
+}
+
+export interface TaskTimeLog {
+    id: string
+    task_id: string
+    user_id: string
+    duration: number // in minutes
+    started_at: string
+    ended_at?: string
+    notes?: string
+    created_at: string
+}
+
+// Task with relations
+export interface TaskWithRelations extends Task {
+    subtasks?: Subtask[]
+    skill?: Skill
+    project?: Project
+    event?: Event
+    time_logs?: TaskTimeLog[]
+    subtasks_completed?: number
+    subtasks_total?: number
+}

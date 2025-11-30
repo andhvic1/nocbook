@@ -251,3 +251,70 @@ export interface TaskWithRelations extends Task {
     subtasks_completed?: number
     subtasks_total?: number
 }
+
+// Note Feature
+export type NoteType = 'formula' | 'tutorial' | 'concept' | 'troubleshooting' | 'reference' | 'code-snippet' | 'other'
+
+export interface Note {
+    id: string
+    user_id: string
+    title: string
+    content: string
+    excerpt?: string
+    category: string
+    note_type: NoteType
+    skill_id?: string
+    project_id?: string
+    event_id?: string
+    task_id?: string
+    tags?: string[]
+    attachments?: string[]
+    is_pinned: boolean
+    is_favorite: boolean
+    view_count: number
+    version: number
+    parent_note_id?: string
+    created_at: string
+    updated_at: string
+}
+
+export interface NoteBacklink {
+    id: string
+    source_note_id: string
+    target_note_id: string
+    context?: string
+    created_at: string
+}
+
+export interface NoteVersion {
+    id: string
+    note_id: string
+    title: string
+    content: string
+    version_number: number
+    changes_summary?: string
+    created_at: string
+}
+
+// Note with relations
+export interface NoteWithRelations extends Note {
+    skill?: Skill
+    project?: Project
+    event?: Event
+    task?: Task
+    backlinks?: NoteBacklink[]
+    versions?: NoteVersion[]
+    linked_notes?: Note[] // Notes that link to this note
+}
+
+// Search result
+export interface NoteSearchResult {
+    id: string
+    title: string
+    excerpt?: string
+    category: string
+    note_type: NoteType
+    tags?: string[]
+    created_at: string
+    rank: number
+}

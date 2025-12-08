@@ -37,7 +37,7 @@ export function Navbar({ sidebarOpen, setSidebarOpen }: NavbarProps) {
                             <button
                                 onClick={() => setSidebarOpen(!sidebarOpen)}
                                 className="lg:hidden p-2 rounded-lg hover:bg-primary/10 dark:hover:bg-primary-dark/10
-                  text-text dark:text-text-dark hover:text-primary dark:hover:text-primary-dark transition-colors"
+                  text-text dark:text-text-dark hover:text  -primary dark:hover:text-primary-dark transition-colors"
                                 aria-label="Toggle sidebar"
                             >
                                 <Menu className="w-6 h-6" />
@@ -58,8 +58,8 @@ export function Navbar({ sidebarOpen, setSidebarOpen }: NavbarProps) {
                                 <div className="hidden sm:flex items-center gap-2 text-sm text-text-secondary dark:text-text-darkSecondary">
                                     <User className="w-4 h-4" />
                                     <span className="hidden md:inline truncate max-w-[120px] lg:max-w-[150px]">
-                    {user.email}
-                  </span>
+                                    {user.email}
+                                  </span>
                                 </div>
                                 <Button
                                     variant="outline"

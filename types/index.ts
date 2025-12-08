@@ -75,7 +75,7 @@ export interface PersonFormData {
 // Add to your existing types/index.ts
 
 export type ProjectCategory =
-    'school' | 'competition' | 'personal' | 'client' | 'startup' | 'web' | 'iot' | 'ai' | 'mobile' | 'api'
+    'school' | 'competition' | 'personal' | 'client' | 'startup' | 'web' | 'iot' | 'ai'  | 'mobile' | 'api'
 
 export type ProjectStatus =
     'idea' | 'planning' | 'in-progress' | 'on-hold' | 'completed' | 'cancelled'

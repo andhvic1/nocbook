@@ -47,7 +47,6 @@ function parseCommaSeparated(value: string | undefined): string[] | null {
 
 export async function POST(request: NextRequest) {
     try {
-        // ✅ FIXED: Gunakan createServerClient dengan @supabase/ssr
         const cookieStore = await cookies()
 
         const supabase = createServerClient(

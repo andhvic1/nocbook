@@ -315,7 +315,7 @@ export function ImportExportModal({ isOpen, onClose, onImportSuccess }: ImportEx
                                             onClick={downloadTemplate}
                                             className="text-sm text-blue-500 dark:text-blue-400 hover:underline font-medium"
                                         >
-                                            Download Excel Template (.xlsx)
+                                            nDownload Excel Template (.xlsx)
                                         </button>
                                     </div>
                                 </div>
